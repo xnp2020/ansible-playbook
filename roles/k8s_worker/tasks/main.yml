@@ -1,0 +1,35 @@
+---
+- name: add k8s repo
+  yum_repository:
+    name: k8s
+    description: k8s repositories
+    baseurl: https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/ 
+    gpgcheck: no
+    enabled: yes
+
+- name: install kubeadm,kubelet
+  yum: 
+    name: 
+      - kubelet-{{ k8s_version }}
+      - kubeadm-{{ k8s_version }} 
+    state: present
+
+- name: enable kubelet service
+  service: 
+    name: kubelet
+    state: started
+    enabled: yes
+
+- name: get join token 
+  shell: kubeadm token create --print-join-command
+  register: join_token
+  delegate_to: "{{ k8s_master_node }}"
+  
+- name: get join token 2
+  debug:
+    var: join_token.stdout
+#    verbosity: 2
+
+- name: join cluster
+  shell: "{{ join_token.stdout }}"
+  ignore_errors: yes

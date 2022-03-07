@@ -1,0 +1,51 @@
+- hosts: 127.0.0.1
+  vars:
+    docker_version: 20.10.9
+  become: yes
+  tasks:
+    - name: install depends
+      yum: 
+        name: 
+          - yum-utils
+          - device-mapper-persistent-data
+          - lvm2
+        state: present
+
+    - name: add docker repo
+      yum_repository:
+        name: docker
+        description: docker repositories
+        baseurl: https://mirrors.aliyun.com/docker-ce/linux/centos/$releasever/$basearch/stable
+        gpgcheck: no 
+        enabled: yes
+          
+    - name: install docker
+      yum:
+        name: docker-ce-{{ docker_version  }}
+        state: present
+
+    - name: copy docker daemon.json
+      copy:
+        src: daemon.json 
+        dest: /etc/docker/
+      notify:
+        - restart_docker
+
+    - name: enable docker service
+      service: 
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: install docker-compose
+      shell: |
+        http_proxy=http://192.168.11.2:10809
+        https_proxy=http://192.168.11.2:10809
+        if [ ! -x /usr/local/bin/docker-compose ];then  curl -L "https://github.com/docker/compose/releases/download/1.29.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose ;fi
+      changed_when: false
+
+  handlers:
+    - name: restart_docker
+      service:
+        name: docker
+        state: restarted

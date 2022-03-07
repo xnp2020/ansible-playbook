@@ -1,0 +1,75 @@
+---
+- name: set hosts file
+  copy: 
+    src: hosts
+    dest: /etc/
+    backup: yes
+
+- name: disable swap
+  command: swapoff -a 
+  register: my_result
+  changed_when: "my_result.rc != 0"
+
+- name: edit swap file
+  lineinfile:
+    backup: yes
+    regexp: '(^[^#]*swap)' 
+    line: '#\1'
+    path: /etc/fstab
+    backrefs: yes
+  tags: swap
+
+- name: disable SELINUX
+  lineinfile:
+    path: /etc/selinux/config
+    regexp: '^SELINUX='
+    line: SELINUX=disabled
+
+- name: disable SELINUX 2
+  command: setenforce 0
+  changed_when: false
+
+- name: disable firewall
+  service:
+    name: firewalld
+    state: stopped
+    enabled: no
+
+#- name: disable dnsmasq
+#  service:
+#    name: dnsmasq
+#    state: stopped
+#    enabled: no
+#    ignore_errors: yes
+
+- name: install ipset ipvsadm
+  yum:
+    name: ipset,ipvsadm
+    state: present
+
+- name: load module
+  command:
+    cmd: modprobe {{ item }}
+  register: module_result
+  changed_when: "module_result.rc != 0"
+  loop:
+    - br_netfilter
+    - ip_vs
+    - ip_vs_rr
+    - ip_vs_wrr
+    - ip_vs_sh
+    - nf_conntrack
+
+- name: copy module file
+  copy:
+    src: k8s.module.conf
+    dest: /etc/modules-load.d/
+
+- name: copy sysctl file
+  copy: 
+    src: k8s.sysctl.conf
+    dest: /etc/sysctl.d
+ 
+  notify: sysctl_load
+
+
