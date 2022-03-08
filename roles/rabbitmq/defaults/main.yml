@@ -1,0 +1,5 @@
+---
+RABBITMQ_DEFAULT_USER: admin
+RABBITMQ_DEFAULT_PASS: 123456
+file_dest: /home/docker/scripts 
+service_dest: /home/rabbitmq
