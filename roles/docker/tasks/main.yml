@@ -32,10 +32,3 @@
     name: docker
     state: started
     enabled: yes
-
-- name: install docker-compose
-  shell: |
-        http_proxy={{ http_proxy }}
-        https_proxy={{ http_proxy }}
-        if [ ! -x /usr/local/bin/docker-compose ];then  curl -L "https://github.com/docker/compose/releases/download/1.29.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose ;fi
-  changed_when: false

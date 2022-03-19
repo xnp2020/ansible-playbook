@@ -1,0 +1,26 @@
+---
+- hosts: all 
+  roles:
+    - chrony 
+    - system
+    - docker
+
+- hosts: all
+  roles:
+    - docker_compose
+  tags: docker_compose
+
+- hosts: all
+  roles:
+    - rabbitmq
+  tags: rabbitmq
+
+- hosts: master
+  roles:
+    - k8s_master
+  tags: k8s_master
+
+- hosts: worker
+  roles:
+    - k8s_worker
+  tags: k8s_worker

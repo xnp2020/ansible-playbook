@@ -1,0 +1,40 @@
+---
+- name: add rabbitmq.repo
+  copy:
+    src: rabbitmq.repo
+    dest: /etc/yum.repos.d/
+
+- name: install rabbitmq-server
+  yum:
+    name: 
+      - erlang
+      - rabbitmq-server
+    state: present
+    enablerepo:
+      - rabbitmq_server
+      - rabbitmq_erlang
+
+- name: copy erlang_cookie files
+  copy:
+    src: .erlang.cookie
+    dest: /var/lib/rabbitmq/
+    owner: rabbitmq
+    mode: 0600
+
+- name: copy plugin files,config file
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{  item.dest }}"
+    owner: "{{ item.owner }}"
+    mode: "{{ item.mode }}"
+  with_items:
+    - { src: 'enabled_plugins',dest: '/etc/rabbitmq',owner: 'rabbitmq',mode: '0600' }
+    - { src: 'rabbitmq.conf',dest: '/etc/rabbitmq',owner: 'rabbitmq',mode: '0600'}
+  notify:
+    - restart_rabbitmq 
+
+- name: enable rabbitmq-server service
+  service: 
+    name: rabbitmq-server
+    state: started
+    enabled: yes

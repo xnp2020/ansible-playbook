@@ -4,7 +4,7 @@ services:
         container_name: rabbitmq
         restart: always
         image: rabbitmq:3.8.1-management
-        hostname: tf-rabbit
+        hostname: {{ ansible_default_ipv4.address }}
         ports:
           - '5672:5672'
           - '15672:15672'

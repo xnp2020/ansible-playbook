@@ -13,8 +13,8 @@
   file:
     dest: "{{ item }}"
     state: directory
-    owner: 999
-    group: 999
+    owner: "999"
+    group: "999"
   with_items:
     - "{{ service_dest }}/data"
     - "{{ service_dest }}/config"
@@ -23,8 +23,8 @@
   copy:
     src: enabled_plugins
     dest: "{{ service_dest }}/config/"
-    owner: 999
-    group: 999
+    owner: "999"
+    group: "999"
 
 - name: start service
   command: docker-compose -f {{ file_dest }}/rabbitmq.yml up -d
