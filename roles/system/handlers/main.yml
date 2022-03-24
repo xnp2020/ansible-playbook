@@ -1,3 +1,0 @@
----
-- name: sysctl_load
-  command: sysctl --system

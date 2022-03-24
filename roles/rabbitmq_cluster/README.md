@@ -1,2 +1,0 @@
-- 必须先配置hostname为node10/node11/node12
-- 必须配置/etc/hosts解析node10/node11/node12对应的ip

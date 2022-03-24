@@ -1,7 +1,0 @@
----
-# handlers file for common
-- name: restart_chronyd
-  service: 
-    name: chronyd
-    state: restarted
-  become: true
