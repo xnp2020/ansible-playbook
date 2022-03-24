@@ -1,0 +1,2 @@
+- rabbitmq集群之间必须互相能通过hostname解析，所以必须定义变量rabbit_server，并分别定义节点的nodename 
+- 使用方法：ansible-playbook -i hosts rabbitmq_cluster.yml

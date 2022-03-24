@@ -1,0 +1,22 @@
+---
+- name: config redis master
+  hosts: redis_master 
+  vars_prompt:
+    - name: "redis_master"
+      prompt: "Please input master info: " 
+      default: "192.168.11.11 6379"
+      private: no
+  roles:
+    - redis_cluster
+
+- name: config redis replicas
+  hosts: redis_slave
+  vars_prompt:
+    - name: "redis_master"
+      prompt: "Please input master info: "
+      default: "192.168.11.11 6379"
+      private: no
+  vars:
+    - redis_slaveof: "192.168.11.11 6379"
+  roles:
+    - redis_cluster

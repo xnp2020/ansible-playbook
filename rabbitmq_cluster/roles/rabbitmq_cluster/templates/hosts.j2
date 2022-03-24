@@ -1,0 +1,8 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+192.168.11.10 node10
+192.168.11.11 node11
+192.168.11.12 node12
+{% for host in rabbit_server %}
+{{ host.ip }} {{ host.hostname }}
+{% endfor %}

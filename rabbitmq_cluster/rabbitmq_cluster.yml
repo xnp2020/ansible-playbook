@@ -1,0 +1,18 @@
+---
+- hosts: 192.168.11.10
+  vars:
+    nodename: rabbit1
+  roles: 
+    - rabbitmq_cluster
+
+- hosts: 192.168.11.11
+  vars:
+    nodename: rabbit2
+  roles:
+    - rabbitmq_cluster
+
+- hosts: 192.168.11.12
+  vars:
+    nodename: rabbit3
+  roles:
+    - rabbitmq_cluster

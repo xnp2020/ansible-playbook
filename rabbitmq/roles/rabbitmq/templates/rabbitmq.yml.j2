@@ -1,0 +1,16 @@
+version: '3'
+services:
+     rabbitmq:
+        container_name: rabbitmq
+        restart: always
+        image: rabbitmq:{{ rabbitmq_version }}
+        hostname: {{ rabbitmq_hostname }}
+        ports:
+          - '5672:5672'
+          - '15672:15672'
+        volumes:
+          - "{{ service_dest }}/data:/var/lib/rabbitmq"
+          - "{{ service_dest }}/config:/etc/rabbitmq"
+        environment:
+          RABBITMQ_DEFAULT_USER: {{ RABBITMQ_DEFAULT_USER }}
+          RABBITMQ_DEFAULT_PASS: {{ RABBITMQ_DEFAULT_PASS }}

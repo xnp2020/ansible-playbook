@@ -1,0 +1,6 @@
+---
+- hosts: all
+  vars:
+    ntp_server: ntp.aliyun.com
+  roles:
+    - chrony

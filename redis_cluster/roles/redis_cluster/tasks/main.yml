@@ -1,0 +1,117 @@
+---
+- name: forbid THP 1
+  lineinfile:
+    path: /etc/rc.d/rc.local
+    regexp: '^echo madvise > /sys/kernel/mm/transparent_hugepage/enabled$'
+    line: "echo madvise > /sys/kernel/mm/transparent_hugepage/enabled"
+    mode: "0755"
+
+- name: forbid THP 2
+  shell:
+    cmd: "echo madvise > /sys/kernel/mm/transparent_hugepage/enabled"
+  changed_when: false 
+
+- name: add open file to redis
+  copy:
+    src: redis.limit.conf
+    dest: /etc/security/limits.d/
+
+- name: config sysctl
+  copy:
+    src: redis.sysctl.conf
+    dest: /etc/sysctl.d
+  notify: sysctl_load
+
+- meta: flush_handlers
+
+- name: install dep
+  yum: 
+    name: gcc,glibc,wget
+    state: present
+
+- name: check if redis-stable is exists
+  shell: ls /tmp/redis-stable
+  ignore_errors: True
+  changed_when: false
+  register: result
+
+- name: get src pack
+  unarchive:
+    src: http://download.redis.io/redis-stable.tar.gz
+    dest: /tmp
+    remote_src: yes
+  when:
+    - result is failed 
+
+- name: check if tar.gz is exists
+  shell: test -x /usr/local/bin/redis-server
+  ignore_errors: True
+  changed_when: false
+  register: result2
+
+- name: compile redis
+  shell:
+    chdir: /tmp
+    cmd: cd redis-stable && make install
+  when: result2 is failed
+
+- name: add systemd
+  copy: 
+    src: redis.service
+    dest: /etc/systemd/system/
+  notify: restart_redis
+
+- name: add user 
+  user:
+    name: redis
+    home: /home/redis
+    shell: /sbin/nologin
+
+- name: set redis conf    
+  template:
+    src: redis.conf.j2
+    dest: /etc/redis/redis.conf
+    owner: redis
+    group: redis
+    mode: '0600'
+  notify: restart_redis
+
+- name: set redis logrotate
+  copy:
+    src: redis
+    dest: /etc/logrotate.d/
+    owner: redis
+    group: redis
+    mode: '0644'
+
+- name: add redis log dir
+  file:
+    path: /var/log/redis
+    owner: redis
+    state: directory   
+
+- name: start redis service
+  service:
+    name: redis
+    state: started
+    enabled: yes
+
+- name: add sentinel service
+  copy:
+    src: redis-sentinel.service
+    dest: /etc/systemd/system/
+
+- name: add sentinel config file
+  template:
+    src: sentinel.conf.j2
+    dest: /etc/redis/sentinel.conf
+    owner: redis
+    group: redis
+    mode: '0600'
+  notify: restart_sentinel
+
+- name: start sentinel service
+  service:
+    name: redis-sentinel
+    state: started
+    enabled: yes

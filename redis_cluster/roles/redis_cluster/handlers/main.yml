@@ -1,0 +1,12 @@
+---
+- name: restart_redis
+  shell:
+    cmd: systemctl daemon-reload && systemctl restart redis
+
+- name: sysctl_load
+  command: sysctl --system
+
+- name: restart_sentinel
+  service:
+    name: redis-sentinel
+    state: restarted

@@ -1,0 +1,62 @@
+---
+- name: set hosts file
+  template: 
+    src: hosts.j2
+    dest: /etc/hosts
+
+- name: add rabbitmq.repo
+  copy:
+    src: rabbitmq.repo
+    dest: /etc/yum.repos.d/
+
+- name: install rabbitmq-server
+  yum:
+    name: 
+      - erlang
+      - rabbitmq-server
+    state: present
+    enablerepo:
+      - rabbitmq_server
+      - rabbitmq_erlang
+
+- name: copy erlang_cookie files
+  copy:
+    src: .erlang.cookie
+    dest: /var/lib/rabbitmq/
+    owner: rabbitmq
+    mode: 0600
+
+- name: copy plugin files
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{  item.dest }}"
+    owner: "{{ item.owner }}"
+    mode: "{{ item.mode }}"
+  with_items:
+    - { src: 'enabled_plugins',dest: '/etc/rabbitmq',owner: 'rabbitmq',mode: '0600' }
+  notify:
+    - restart_rabbitmq 
+
+- name: copy config file
+  template:
+    src: rabbitmq.conf.j2
+    dest: /etc/rabbitmq/rabbitmq.conf
+    owner: rabbitmq
+    mode: '0600'
+  notify:
+    - restart_rabbitmq
+
+- name: copy env file
+  template:
+    src: rabbitmq-env.conf.j2
+    dest: /etc/rabbitmq/rabbitmq-env.conf
+    owner: rabbitmq
+    mode: '0600'
+  notify:
+    - restart_rabbitmq
+
+- name: enable rabbitmq-server service
+  service: 
+    name: rabbitmq-server
+    state: started
+    enabled: yes

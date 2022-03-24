@@ -1,0 +1,8 @@
+cluster_formation.peer_discovery_backend = classic_config
+{% for i in rabbit_server %}
+cluster_formation.classic_config.nodes.{{ i.count }} = rabbit@{{ i.hostname }}
+{% endfor %}
+default_user = {{ default_user }}
+default_pass = {{ default_pass }}
+cluster_name = rabbit_cluster
+disk_free_limit.relative = 1.5

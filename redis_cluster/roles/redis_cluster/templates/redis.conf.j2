@@ -1,0 +1,24 @@
+#监听所有网卡
+bind 0.0.0.0
+port 6379
+#开启密码验证
+requirepass {{ auth_pass }}
+#启用aof
+appendonly yes
+#设置aof、rdb保存目录
+dir /home/redis
+#自定义aof文件
+appendfilename "appendonly.aof"
+#禁用rdb
+save ""
+#master地址
+{% if redis_slaveof is defined %}
+replicaof {{ redis_slaveof }}
+{% endif %}
+#master密码
+masterauth {{ auth_pass }}
+#至少1个从节点连接到主节点，并且从节点延迟小于等于10s，主节点才接受写请求
+min-replicas-to-write 1
+min-replicas-max-lag 5
+#日志位置
+logfile "/var/log/redis/redis.log"

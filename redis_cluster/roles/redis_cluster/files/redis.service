@@ -1,0 +1,14 @@
+[Unit]
+Description=Redis
+After=syslog.target
+
+[Service]
+ExecStart=/usr/local/bin/redis-server /etc/redis/redis.conf
+RestartSec=5s
+Restart=on-success
+User=redis
+Group=redis
+LimitNOFILE=500000
+
+[Install]
+WantedBy=multi-user.target

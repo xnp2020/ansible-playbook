@@ -1,0 +1,17 @@
+port 26379
+daemonize no
+pidfile "/var/run/redis-sentinel.pid"
+logfile "/var/log/redis/sentinel.log"
+dir "/tmp"
+#sentinel监控的master及法定人数
+sentinel monitor mymaster {{ redis_master  }} 2
+#sentinel验证集群使用的密码
+sentinel auth-pass mymaster {{ auth_pass }}
+#主节点持续30s不可达则认为主观下线
+
+acllog-max-len 128
+
+sentinel failover-timeout mymaster 60000
+sentinel deny-scripts-reconfig yes
+sentinel resolve-hostnames no
+sentinel announce-hostnames no

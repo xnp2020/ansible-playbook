@@ -1,0 +1,3 @@
+- 需要提前配置好hostname
+- 注意system role会覆盖/etc/hosts
+- 使用方法：ansible-playbook -i hosts k8s.yml

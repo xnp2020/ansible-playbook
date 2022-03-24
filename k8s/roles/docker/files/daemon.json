@@ -1,0 +1,28 @@
+{
+  "graph": "/home/docker/store",
+  "bip": "192.188.0.1/16",
+  "default-address-pools" : [
+    {
+      "base" : "12.11.0.0/16",
+      "size" : 24
+    }
+  ],
+  "exec-opts": ["native.cgroupdriver=systemd"],
+  "registry-mirrors": [
+      "https://fz5yth0r.mirror.aliyuncs.com",
+      "https://dockerhub.mirrors.nwafu.edu.cn/",
+      "https://mirror.ccs.tencentyun.com",
+      "https://docker.mirrors.ustc.edu.cn/",
+      "https://reg-mirror.qiniu.com",
+      "http://hub-mirror.c.163.com/",
+      "https://registry.docker-cn.com"
+  ],
+  "storage-driver": "overlay2",
+  "storage-opts": [
+    "overlay2.override_kernel_check=true"
+  ],
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "100m"
+  }
+}
