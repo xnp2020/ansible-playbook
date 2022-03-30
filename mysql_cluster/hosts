@@ -1,11 +1,5 @@
-[lb_servers]
-lbserver
+[master1]
+192.168.11.10
 
-[backend_servers]
-mysql_1
-mysql_2
-
-[memcached_servers]
-cached_server1
-cached_server2
-
+[master2]
+192.168.11.11

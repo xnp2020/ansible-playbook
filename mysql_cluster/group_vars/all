@@ -1,0 +1,10 @@
+---
+USERNAME: xnp2020
+PASSWD: Xianianping_2020
+ROOTPASSWD: Xianianping_2021
+mysqld_version: 8.0.28
+repl_conn_limit: '%'
+repluser: repl
+replpass: Repl_2020
+master1: '192.168.11.10'
+master2: '192.168.11.11'

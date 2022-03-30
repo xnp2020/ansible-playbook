@@ -1,0 +1,67 @@
+---
+- name: copy mysql8 install repo
+  copy:
+    src: mysql80-community-release-el7-5.noarch.rpm
+    dest: /tmp
+
+- name: install mysql8 repo
+  yum:
+    name: 
+      - /tmp/mysql80-community-release-el7-5.noarch.rpm
+    state: present 
+
+- name: install mysql8
+  yum:
+    name: mysql-community-server-{{ mysqld_version }}
+    state: present
+
+- name: copy my.cnf
+  template:
+    src: my.cnf.j2
+    dest: /etc/my.cnf
+  notify: restart mysqld
+  
+- meta: flush_handlers
+
+- name: start mysqld service
+  service:
+    name: mysqld
+    state: started
+    enabled: yes
+
+- name: get root passwd
+  shell: 
+    cmd: grep 'temporary password' /var/log/mysqld.log |awk '{print $NF}'
+  ignore_errors: True
+  changed_when: false
+  register: root_passwd
+
+- name: update root passwd
+  shell:
+    cmd: mysql -u root -p'{{ root_passwd.stdout }}' -e "alter user root@'localhost' identified by '{{ ROOTPASSWD }}';" --connect-expired-password
+  ignore_errors: True
+  changed_when: false
+
+- name: create super user
+  shell: 
+    cmd: mysql -uroot -p'{{ ROOTPASSWD }}' -e "create user {{ USERNAME }}@'%' identified by '{{ PASSWD }}';grant all on *.* to {{ USERNAME }}@'%';"
+  ignore_errors: True    
+  changed_when: false
+
+- name: create repl user
+  shell:
+    cmd: mysql -uroot -p'{{ ROOTPASSWD }}' -e "create user {{ repluser }}@'{{ repl_conn_limit }}' identified by '{{ replpass }}';grant REPLICATION SLAVE on *.* to {{ repluser }}@'{{ repl_conn_limit }}';"
+  ignore_errors: True 
+  changed_when: false
+  
+- name: add replication info
+  shell:
+    cmd: mysql -uroot -p'{{ ROOTPASSWD }}' -e "CHANGE REPLICATION SOURCE TO SOURCE_HOST='{{ master2 }}',SOURCE_USER='{{ repluser }}',SOURCE_PASSWORD='{{ replpass }}',SOURCE_Auto_Position=1;start slave;"
+  when: "inventory_hostname  in groups.master1"
+  ignore_errors: True
+
+- name: add replication info
+  shell:
+    cmd: mysql -uroot -p'{{ ROOTPASSWD }}' -e "CHANGE REPLICATION SOURCE TO SOURCE_HOST='{{ master1 }}',SOURCE_USER='{{ repluser }}',SOURCE_PASSWORD='{{ replpass }}',SOURCE_Auto_Position=1;start slave;"
+  when: "inventory_hostname  in groups.master2"
+  ignore_errors: True

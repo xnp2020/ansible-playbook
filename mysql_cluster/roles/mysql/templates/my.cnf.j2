@@ -1,0 +1,32 @@
+[mysqld]
+default-authentication-plugin=mysql_native_password  #定义默认验证插件
+log_bin=mysql-bin  #设置二进制日志文件名
+{% if (inventory_hostname in groups.master1) %}
+server_id=101
+auto-increment-increment=2  #自增增量为2
+auto-increment-offset=1  #自增初始字段为1
+{% endif %}
+{% if (inventory_hostname  in groups.master2) %}
+server_id=102
+auto-increment-increment=2  #自增增量为2
+auto-increment-offset=2  #自增初始字段为1
+{% endif %}
+innodb_flush_log_at_trx_commit=1
+sync_binlog=1
+
+wait_timeout = 600
+interactive_timeout = 600
+max_connections=1000  #最大连接数
+
+skip-name-resolve
+
+ngram_token_size=1  #全文检索分词
+
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+
+log-error=/var/log/mysqld.log
+pid-file=/var/run/mysqld/mysqld.pid
+
+gtid_mode=ON
+enforce-gtid-consistency=ON
