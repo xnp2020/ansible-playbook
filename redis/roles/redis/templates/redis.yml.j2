@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  redis:
+    container_name: redis
+    image: redis:{{ redis_version }}
+    sysctls:
+      - net.core.somaxconn=1024
+      - vm.overcommit_memory=1
+    command: redis-server /usr/local/etc/redis/redis.conf --appendonly yes --requirepass {{ redis_passwd }}
+    ports:
+      - "6379:6379"
+    volumes:
+      - "{{ service_dest }}/conf/redis.conf:/usr/local/etc/redis/redis.conf"
+      - "{{ service_dest }}/data:/data"

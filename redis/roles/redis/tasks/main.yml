@@ -1,0 +1,18 @@
+---
+- name: create docker file dest
+  file:
+    dest: "{{ file_dest }}"
+    state: directory
+
+- name: copy docker-compose file to dest host
+  template:
+    src: redis.yml.j2
+    dest: "{{ file_dest }}/redis.yml"
+
+- name: copy config file
+  copy:
+    dest: "{{ service_dest }}/conf/"
+    src: redis.conf
+
+- name: start service
+  command: docker-compose -f {{ file_dest }}/redis.yml up -d

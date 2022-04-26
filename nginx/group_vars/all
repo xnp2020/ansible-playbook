@@ -1,0 +1,5 @@
+---
+file_dest: /home/docker/scripts 
+service_dest: /home/nginx
+docker_home: /home/docker/store
+docker_version: 20.10.9

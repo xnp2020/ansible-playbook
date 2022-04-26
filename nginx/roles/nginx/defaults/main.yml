@@ -1,0 +1,4 @@
+---
+nginx_version: latest
+file_dest: /home/docker/scripts 
+service_dest: /home/nginx

@@ -1,0 +1,28 @@
+---
+- name: create docker file dest
+  file:
+    dest: "{{ file_dest }}"
+    state: directory
+
+- name: copy docker-compose file to dest host
+  template:
+    src: nginx.yml.j2
+    dest: "{{ file_dest }}/nginx.yml"
+
+- name: create dir for nginx
+  file:
+    dest: "{{ service_dest }}/config/conf.d"
+    state: directory
+
+- name: copy conf file
+  copy:
+    src: default.conf
+    dest: "{{ service_dest }}/config/conf.d"
+
+- name: copy conf file 2
+  copy:
+    src: nginx.conf
+    dest: "{{ service_dest }}/config"
+
+- name: start service
+  command: docker-compose -f {{ file_dest }}/nginx.yml up -d

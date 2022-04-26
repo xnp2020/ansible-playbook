@@ -1,0 +1,8 @@
+---
+file_dest: /home/docker/scripts
+service_dest: /home/redis
+redis_version: 6.2.6
+redis_passwd: 77917b7b553c1e681b0b5d090d530c15
+
+docker_home: /home/docker/store
+docker_version: 20.10.9

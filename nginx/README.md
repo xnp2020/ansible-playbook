@@ -1,0 +1,4 @@
+- 使用docker-compose部署单实例nginx
+- 默认docker安装目录在/var/lib/docker，版本20.10.9
+- 默认docker-compose版本1.29.0
+- 使用方法：先编辑hosts文件为要部署的服务器IP，然后执行：ansible-playbook -i hosts nginx.yml

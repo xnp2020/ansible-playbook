@@ -1,0 +1,16 @@
+version: '3'
+services:
+     nginx:
+        container_name: nginx
+        restart: always
+        image: nginx:{{ nginx_version }}
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - "{{ service_dest }}/config/nginx.conf:/etc/nginx/nginx.conf/:rw"
+            - "{{ service_dest }}/config/conf.d:/etc/nginx/conf.d/:rw"
+            - "{{ service_dest }}/logs:/var/log/nginx/:rw"
+            - "{{ service_dest }}/ssl:/etc/nginx/ssl/:rw"
+            - "{{ service_dest }}/html:/usr/share/nginx/html:rw"
+            - "/etc/localtime:/etc/localtime"

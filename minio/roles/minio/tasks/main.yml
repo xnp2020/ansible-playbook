@@ -1,0 +1,13 @@
+---
+- name: create docker file dest
+  file:
+    dest: "{{ file_dest }}"
+    state: directory
+
+- name: copy docker-compose file to dest host
+  template:
+    src: minio.yml.j2
+    dest: "{{ file_dest }}/minio.yml"
+
+- name: start service
+  command: docker-compose -f {{ file_dest }}/minio.yml up -d

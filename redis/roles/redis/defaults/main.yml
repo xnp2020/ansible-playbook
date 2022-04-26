@@ -1,0 +1,5 @@
+---
+redis_version: 6.2.6
+file_dest: /home/docker/scripts 
+service_dest: /home/redis
+redis_passwd: 77917b7b553c1e681b0b5d090d530c15

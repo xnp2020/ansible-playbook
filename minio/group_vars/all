@@ -1,0 +1,8 @@
+---
+file_dest: /home/docker/scripts
+service_dest: /home/minio
+minio_version: latest
+MINIO_ACCESS_KEY: minioadmin
+MINIO_SECRET_KEY: c2f7ab46df3db842040a86a0897a5377
+docker_home: /home/docker/store
+docker_version: 20.10.9
