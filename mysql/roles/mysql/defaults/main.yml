@@ -1,6 +1,6 @@
 ---
 mysql_version: 8.0.23
-server-id: 100
+server_id: 100
 mysql_passwd: 2184e7d8e32b2982f99eddc1a85964e0
 
 file_dest: /home/docker/scripts 
