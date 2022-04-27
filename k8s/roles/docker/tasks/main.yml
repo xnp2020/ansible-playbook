@@ -20,10 +20,15 @@
     name: docker-ce-{{ docker_version  }}
     state: present
 
+- name: create dir
+  file:
+    dest: /etc/docker
+    state: directory
+
 - name: copy docker daemon.json
-  copy:
-    src: daemon.json 
-    dest: /etc/docker/
+  template:
+    src: daemon.json.j2 
+    dest: /etc/docker/daemon.json
   notify:
     - restart_docker
 
