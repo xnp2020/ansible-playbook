@@ -1,0 +1,23 @@
+---
+- name: create docker file dest
+  file:
+    dest: "{{ file_dest }}"
+    state: directory
+
+- name: copy docker-compose file to dest host
+  template:
+    src: mysql.yml.j2
+    dest: "{{ file_dest }}/mysql.yml"
+
+- name: create dir for mysql
+  file:
+    dest: "{{ service_dest }}/config"
+    state: directory
+
+- name: copy conf file
+  template:
+    src: my.cnf.j2
+    dest: "{{ service_dest }}/config/my.cnf"
+
+- name: start service
+  command: docker-compose -f {{ file_dest }}/mysql.yml up -d

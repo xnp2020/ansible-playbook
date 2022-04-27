@@ -1,0 +1,17 @@
+[client]
+default-character-set=utf8mb4
+
+[mysqld]
+wait_timeout = 600
+interactive_timeout = 600
+max_connections=1000
+
+log_bin=mysql-binlog
+server-id = {{ server-id }}
+
+gtid_mode=ON
+enforce-gtid-consistency=ON
+
+skip-name-resolve
+
+ngram_token_size=1

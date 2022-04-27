@@ -1,0 +1,9 @@
+---
+file_dest: /home/docker/scripts 
+service_dest: /home/mysql
+docker_home: /home/docker/store
+docker_version: 20.10.9
+
+mysql_version: 8.0.23
+server-id: 100
+mysql_passwd: 2184e7d8e32b2982f99eddc1a85964e0
