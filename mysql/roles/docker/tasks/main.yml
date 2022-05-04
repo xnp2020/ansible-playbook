@@ -31,6 +31,8 @@
     dest: /etc/docker/daemon.json
   notify:
     - restart_docker
+    
+- meta: flush_handlers
 
 - name: enable docker service
   service: 
