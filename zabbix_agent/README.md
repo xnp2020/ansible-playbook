@@ -1,0 +1,3 @@
+- 使用yum部署zabbix_agent2
+- 默认zabbix server地址为：192.168.2.13，请根据实际情况修改(group_vars/all)
+- 使用方法：先编辑hosts文件为要部署的服务器IP，然后执行：ansible-playbook -i hosts zabbix_agent.yml
