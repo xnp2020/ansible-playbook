@@ -1,0 +1,3 @@
+- 使用yum部署chronyd
+- 默认ntp server地址为：ntp.aliyun.com，请根据实际情况修改(group_vars/all)
+- 使用方法：先编辑hosts文件为要部署的服务器IP，然后执行：ansible-playbook -i hosts chrony.yml

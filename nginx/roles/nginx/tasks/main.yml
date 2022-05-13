@@ -24,5 +24,16 @@
     src: nginx.conf
     dest: "{{ service_dest }}/config"
 
+- name: copy conf file 2
+  template:
+    src: logrotate.j2
+    dest: "{{ service_dest }}/config/logrotate"
+
 - name: start service
   command: docker-compose -f {{ file_dest }}/nginx.yml up -d
+
+- name: add cron
+  cron:
+    minute: 0
+    job: /usr/sbin/logrotate -s /tmp/logrotate.status /home/nginx/config/logrotate
+    name: nginx logrotate

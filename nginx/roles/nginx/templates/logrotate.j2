@@ -1,0 +1,10 @@
+{{ service_dest }}/logs/*.log {
+    copytruncate
+    weekly
+    maxsize 1G
+    rotate 5
+    missingok
+    notifempty
+    compress
+    delaycompress
+}
