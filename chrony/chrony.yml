@@ -1,5 +1,6 @@
 ---
 - hosts: all
+  gather_facts: no
   vars:
     ntp_server: [ 'ntp.aliyun.com' ]
   roles:
