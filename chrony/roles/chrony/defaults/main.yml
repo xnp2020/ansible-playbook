@@ -1,3 +1,3 @@
 ---
 # defaults file for common
-ntp_server: ntp.aliyun.com
+ntp_server: [ 'ntp.aliyun.com' ]
