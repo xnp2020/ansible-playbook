@@ -1,17 +1,17 @@
-filebeat.inputs:                   # inputs为复数，表名type可以有多个
-- type: log                        # 输入类型
-  enabled: true                    # 启用这个type配置
+filebeat.inputs:
+- type: log
+  enabled: true
   paths:
     - /home/log/*/log.log
-  multiline.pattern: '^20'                                    #多行匹配规则
-  multiline.negate: true                                        #将不匹配的规则的行合并在一起
-  multiline.match: after                                #合并到匹配规则的上一行末尾
+  multiline.pattern: '^20'
+  multiline.negate: true
+  multiline.match: after
   fields:
     env: {{ deploy_env }}
     host.name: {{ inventory_hostname }}
   fields_under_root: true
 
-{% if deploy_env = "prd"  %}
+{% if deploy_env == "prd"  %}
 - type: log                        
   enabled: true                    
   paths:

@@ -4,6 +4,11 @@
     dest: "{{ file_dest }}"
     state: directory
 
+- name: create service_dest dir
+  file:
+    dest: "{{ service_dest }}"
+    state: directory
+
 - name: copy docker-compose file to dest host
   template:
     src: fb.yml.j2
