@@ -1,0 +1,41 @@
+---
+- name: install depends
+  yum: 
+    name: 
+      - yum-utils
+      - device-mapper-persistent-data
+      - lvm2
+    state: present
+
+- name: add docker repo
+  yum_repository:
+    name: docker
+    description: docker repositories
+    baseurl: https://mirrors.aliyun.com/docker-ce/linux/centos/$releasever/$basearch/stable
+    gpgcheck: no 
+    enabled: yes
+      
+- name: install docker
+  yum:
+    name: docker-ce-{{ docker_version  }}
+    state: present
+
+- name: create dir
+  file:
+    dest: /etc/docker
+    state: directory
+
+- name: copy docker daemon.json
+  template:
+    src: daemon.json.j2 
+    dest: /etc/docker/daemon.json
+  notify:
+    - restart_docker
+    
+- meta: flush_handlers
+
+- name: enable docker service
+  service: 
+    name: docker
+    state: started
+    enabled: yes

@@ -1,0 +1,23 @@
+---
+- name: create docker file dest
+  file:
+    dest: "{{ file_dest }}"
+    state: directory
+
+- name: copy docker-compose file to dest host
+  template:
+    src: fb.yml.j2
+    dest: "{{ file_dest }}/fb.yml"
+
+- name: copy config file
+  template:
+    dest: "{{ service_dest }}/filebeat.yml"
+    src: filebeat.yml.j2
+
+- name: copy ca file
+  copy:
+    dest: "{{ service_dest }}/"
+    src: ca.crt
+
+- name: start service
+  command: docker-compose -f {{ file_dest }}/fb.yml up -d

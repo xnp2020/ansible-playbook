@@ -1,0 +1,4 @@
+---
+filebeat_version: 7.13.2
+file_dest: /home/docker/scripts 
+service_dest: /home/filebeat

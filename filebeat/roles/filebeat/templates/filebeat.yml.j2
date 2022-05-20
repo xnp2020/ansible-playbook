@@ -1,0 +1,50 @@
+filebeat.inputs:                   # inputs为复数，表名type可以有多个
+- type: log                        # 输入类型
+  enabled: true                    # 启用这个type配置
+  paths:
+    - /home/log/*/log.log
+  multiline.pattern: '^20'                                    #多行匹配规则
+  multiline.negate: true                                        #将不匹配的规则的行合并在一起
+  multiline.match: after                                #合并到匹配规则的上一行末尾
+  fields:
+    env: {{ deploy_env }}
+    host.name: {{ inventory_hostname }}
+  fields_under_root: true
+
+{% if deploy_env = "prd"  %}
+- type: log                        
+  enabled: true                    
+  paths:
+    - /home/log/*/error-log.log
+  multiline.pattern: '^20'                                   
+  multiline.negate: true                                        
+  multiline.match: after                                
+  fields:
+    env: {{ deploy_env }}
+    label: "error"
+    host.name: {{ inventory_hostname }}
+  fields_under_root: true
+{% endif %}
+
+setup.template.name: "filebeat"
+setup.template.pattern: "filebeat-*"
+setup.template.enabled: "true"
+
+output.elasticsearch:
+  hosts: ["192.168.2.204:9200","192.168.2.205:9200","192.168.2.206:9200"]
+  protocol: "https"
+  username: "elastic"
+  password: "FMdQLshFs7E75kPoJ9Md"
+  ssl.certificate_authorities: ["{{ service_dest }}/ca.crt"]
+  index: "filebeat-%{[agent.version]}-%{+yyyy.MM.dd}"
+  indices:
+    - index: "error-%{[agent.version]}"
+      when.contains:
+        label: "error"
+
+setup.dashboards.enabled: true
+
+setup.kibana:
+  host: "https://192.168.2.204:5601"
+  ssl.enabled: true
+  ssl.certificate_authorities: ["{{ service_dest }}/ca.crt"]

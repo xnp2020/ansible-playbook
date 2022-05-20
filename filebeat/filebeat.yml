@@ -1,0 +1,8 @@
+---
+- hosts: all
+  vars:
+    deploy_env: prd
+  roles:
+#    - docker
+#    - docker-compose
+    - filebeat

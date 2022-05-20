@@ -1,0 +1,10 @@
+version: '3'
+services:
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:{{ filebeat_version }}
+    container_name: filebeat
+    restart: always
+    volumes:
+      - {{ service_dest }}/filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - /home/log:/home/log
+      - {{ service_dest }}/ca.crt:{{ service_dest }}/ca.crt
