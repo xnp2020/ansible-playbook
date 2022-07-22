@@ -1,5 +1,6 @@
 ---
 - hosts: all
+  gather_facts: no
   vars:
     deploy_env: prd
   roles:
