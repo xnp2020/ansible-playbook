@@ -1,0 +1,3 @@
+---
+- name: sysctl_load
+  command: sysctl -p

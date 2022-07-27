@@ -14,5 +14,12 @@
     dest: "{{ service_dest }}/conf/"
     src: redis.conf
 
+- name: config sysctl
+  lineinfile:
+    path: /etc/sysctl.conf
+    line: vm.overcommit_memory = 1
+  
+  notify: sysctl_load
+    
 - name: start service
   command: docker-compose -f {{ file_dest }}/redis.yml up -d
