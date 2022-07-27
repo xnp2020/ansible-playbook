@@ -21,5 +21,7 @@
   
   notify: sysctl_load
     
+- meta: flush_handlers
+
 - name: start service
   command: docker-compose -f {{ file_dest }}/redis.yml up -d
